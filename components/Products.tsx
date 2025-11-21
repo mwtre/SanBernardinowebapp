@@ -56,8 +56,20 @@ const products = [
 
 export default function Products() {
   return (
-    <section className="py-12 sm:py-16 md:py-20 relative z-10 w-full overflow-hidden" id="products-section">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <section 
+      className="relative w-full overflow-hidden" 
+      id="products-section"
+      style={{ 
+        paddingTop: '80px',
+        paddingBottom: '80px',
+        marginTop: '40px',
+        position: 'relative',
+        zIndex: 20,
+        backgroundColor: '#26b4f4',
+        isolation: 'isolate'
+      }}
+    >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

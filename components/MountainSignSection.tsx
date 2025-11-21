@@ -11,7 +11,11 @@ export default function MountainSignSection() {
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
       className="relative w-full flex flex-col items-center justify-center overflow-hidden"
-      style={{ zIndex: 5 }}
+      style={{ 
+        zIndex: 5,
+        position: 'relative',
+        marginBottom: '60px'
+      }}
     >
       {/* Parallax Background */}
       <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>

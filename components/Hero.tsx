@@ -8,7 +8,14 @@ import WaterSlider from './WaterSlider';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center z-10">
+    <section 
+      className="relative min-h-[90vh] flex items-center justify-center" 
+      style={{ 
+        zIndex: 10,
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    >
       {/* Parallax Background */}
       <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
         <ParallaxBackground
@@ -65,12 +72,17 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* Water Slider */}
+          {/* Water Slider - Isolated section */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="w-full mt-16"
+            className="w-full mt-20 sm:mt-24 md:mt-32 mb-8 sm:mb-12 md:mb-16"
+            style={{ 
+              position: 'relative',
+              zIndex: 15,
+              isolation: 'isolate'
+            }}
           >
             <WaterSlider />
           </motion.div>

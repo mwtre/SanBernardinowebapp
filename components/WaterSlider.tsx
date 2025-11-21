@@ -358,7 +358,12 @@ export default function WaterSlider() {
       style={{ 
         minHeight: '400px',
         maxHeight: '500px',
-        touchAction: 'pan-y pinch-zoom' // Allow vertical scroll but handle horizontal swipes
+        touchAction: 'pan-y pinch-zoom', // Allow vertical scroll but handle horizontal swipes
+        position: 'relative',
+        zIndex: 1,
+        isolation: 'isolate',
+        paddingTop: '20px',
+        paddingBottom: '20px'
       }}
     >
       {/* Swipe to Discover Indicator */}
