@@ -57,11 +57,13 @@ export default function WaterSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
   const [currentX, setCurrentX] = useState(0);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const ratioRef = useRef(0);
   const windowWidthRef = useRef(0);
+  const isHorizontalSwipe = useRef(false);
 
   // Use IntersectionObserver to only change background when WaterSlider is in view
   useEffect(() => {
@@ -228,8 +230,11 @@ export default function WaterSlider() {
   const onStart = (e: MouseEvent | TouchEvent) => {
     setIsDragging(true);
     const pageX = 'touches' in e ? e.touches[0].pageX : (e as MouseEvent).pageX;
+    const pageY = 'touches' in e ? e.touches[0].pageY : (e as MouseEvent).pageY;
     setCurrentX(pageX);
     setStartX(pageX);
+    setStartY(pageY);
+    isHorizontalSwipe.current = false;
 
     const card = cardsRef.current[currentIndex];
     if (card) {
@@ -242,40 +247,57 @@ export default function WaterSlider() {
   const onMove = (e: MouseEvent | TouchEvent) => {
     if (!isDragging) return;
 
-    e.preventDefault(); // Prevent default scrolling
-    
     const pageX = 'touches' in e ? e.touches[0].pageX : (e as MouseEvent).pageX;
-    setCurrentX(pageX);
-
-    let diff = startX - pageX;
-    diff *= -1;
-
-    const maxDiff = windowWidthRef.current / 3;
-    if (Math.abs(diff) > maxDiff) {
-      diff = diff > 0 ? maxDiff : -maxDiff;
+    const pageY = 'touches' in e ? e.touches[0].pageY : (e as MouseEvent).pageY;
+    const deltaX = Math.abs(pageX - startX);
+    const deltaY = Math.abs(pageY - startY);
+    
+    // Determine if this is a horizontal swipe (only after initial movement)
+    if (!isHorizontalSwipe.current && deltaX > 10) {
+      isHorizontalSwipe.current = deltaX > deltaY;
     }
+    
+    // Only prevent default and move card if it's a horizontal swipe
+    if (isHorizontalSwipe.current && deltaX > 10) {
+      e.preventDefault(); // Prevent default scrolling for horizontal swipes
+      
+      setCurrentX(pageX);
 
-    moveCard(diff);
+      let diff = startX - pageX;
+      diff *= -1;
+
+      const maxDiff = windowWidthRef.current / 3;
+      if (Math.abs(diff) > maxDiff) {
+        diff = diff > 0 ? maxDiff : -maxDiff;
+      }
+
+      moveCard(diff);
+    }
   };
 
   const onEnd = () => {
     if (!isDragging) return;
     setIsDragging(false);
 
-    const diff = startX - currentX;
-    const direction = diff > 0 ? 'left' : 'right';
+    // Only process swipe if it was a horizontal swipe
+    if (isHorizontalSwipe.current) {
+      const diff = startX - currentX;
+      const direction = diff > 0 ? 'left' : 'right';
 
-    if (Math.abs(diff) > windowWidthRef.current / 4) {
-      if (direction === 'left') {
-        slideLeft();
+      if (Math.abs(diff) > windowWidthRef.current / 4) {
+        if (direction === 'left') {
+          slideLeft();
+        } else {
+          slideRight();
+        }
       } else {
-        slideRight();
+        cancelMoveCard();
       }
-    } else {
-      cancelMoveCard();
     }
 
     setStartX(0);
+    setStartY(0);
+    isHorizontalSwipe.current = false;
   };
 
 
@@ -331,7 +353,14 @@ export default function WaterSlider() {
   }, [isDragging, startX, currentX, currentIndex]);
 
   return (
-    <div className="relative overflow-x-hidden w-full h-full min-h-[500px] md:min-h-[600px]">
+    <div 
+      className="relative overflow-x-hidden overflow-y-hidden w-full h-full" 
+      style={{ 
+        minHeight: '400px',
+        maxHeight: '500px',
+        touchAction: 'pan-y pinch-zoom' // Allow vertical scroll but handle horizontal swipes
+      }}
+    >
       {/* Swipe to Discover Indicator */}
       <div className="absolute top-4 md:top-6 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-2 md:gap-3 text-white text-sm md:text-base lg:text-lg font-medium drop-shadow-lg px-4">
         <svg 
@@ -450,7 +479,7 @@ export default function WaterSlider() {
       </div>
 
       {/* Placeholder Indicators */}
-      <div className="cards-placeholder block relative mb-4 text-center mt-[500px] md:mt-[600px]">
+      <div className="cards-placeholder block relative mb-4 text-center mt-[400px] md:mt-[500px]">
         {products.map((_, index) => (
           <div
             key={index}

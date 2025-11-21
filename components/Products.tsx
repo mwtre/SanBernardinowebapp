@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { Suspense, lazy } from 'react';
+import { ErrorBoundary } from './ErrorBoundary';
 import Bottle3DViewer from './Bottle3DViewer';
 
 const products = [
@@ -111,11 +113,27 @@ export default function Products() {
                       aspectRatio: '1 / 1'
                     }}
                   >
-                    <Bottle3DViewer
-                      bottleType={product.type as 'still' | 'sparkling' | 'extra-sparkling'}
-                      showControls={false}
-                      modelUrl="/SanBernardinowebapp/models/hitem3d.glb"
-                    />
+                    <ErrorBoundary
+                      fallback={
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200/20 rounded-lg">
+                          <span className="text-white text-xs">3D Model</span>
+                        </div>
+                      }
+                    >
+                      <Suspense
+                        fallback={
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200/20 rounded-lg">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                          </div>
+                        }
+                      >
+                        <Bottle3DViewer
+                          bottleType={product.type as 'still' | 'sparkling' | 'extra-sparkling'}
+                          showControls={false}
+                          modelUrl="/SanBernardinowebapp/models/hitem3d.glb"
+                        />
+                      </Suspense>
+                    </ErrorBoundary>
                   </div>
                 </div>
 

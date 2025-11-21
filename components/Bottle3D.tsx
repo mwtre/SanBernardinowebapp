@@ -280,10 +280,10 @@ export default function Bottle3D({
         }}
         gl={{ 
           alpha: true, 
-          antialias: true,
-          powerPreference: "high-performance"
+          antialias: typeof window !== 'undefined' && window.innerWidth > 768, // Disable antialiasing on mobile
+          powerPreference: typeof window !== 'undefined' && window.innerWidth > 768 ? "high-performance" : "low-power"
         }}
-        dpr={[1, 2]} // Limit pixel ratio for better mobile performance
+        dpr={typeof window !== 'undefined' && window.innerWidth > 768 ? [1, 2] : [1, 1.5]} // Lower pixel ratio on mobile
       >
         <PerspectiveCamera makeDefault position={[0, 0, 3]} fov={50} />
         

@@ -26,7 +26,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="w-full flex items-center justify-center mb-0"
+            className="w-full flex items-center justify-center mb-4 sm:mb-6 md:mb-8"
           >
             <SanBernardino3D />
           </motion.div>
@@ -36,7 +36,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center w-full max-w-4xl -mt-48"
+            className="text-center w-full max-w-4xl -mt-16 sm:-mt-24 md:-mt-32 lg:-mt-48"
           >
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-black mb-4 md:mb-6 px-4" style={{ fontFamily: 'var(--font-playfair), serif' }}>
               Alpine by Origin
