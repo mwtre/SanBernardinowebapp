@@ -32,60 +32,88 @@ function BottleMesh({
   // Handle GLB model loading via useEffect
   useEffect(() => {
     if (modelUrl) {
+      // Detect mobile and disable 3D on low-end devices
+      const isMobile = typeof window !== 'undefined' && (window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+      
+      // On mobile, skip 3D model loading to prevent crashes
+      if (isMobile) {
+        setModel(null);
+        return;
+      }
+
+      let isCancelled = false;
+      let lastProgressLog = 0;
+      
       // Use GLTFLoader directly for conditional loading
       const loader = new GLTFLoader();
       loader.load(
         modelUrl,
         (gltf) => {
-          console.log('GLB model loaded successfully:', gltf);
-          const clonedScene = gltf.scene.clone();
+          if (isCancelled) return;
           
-          // Calculate bounding box to scale and center model
-          const box = new THREE.Box3().setFromObject(clonedScene);
-          const size = box.getSize(new THREE.Vector3());
-          const center = box.getCenter(new THREE.Vector3());
-          
-          // Scale model to fit nicely in view (target height ~2.2 units to fit in circle)
-          const targetHeight = 2.2;
-          const scale = targetHeight / size.y;
-          
-          // Apply scale uniformly
-          clonedScene.scale.set(scale, scale, scale);
-          
-          // Center the model at origin by moving it
-          // First get the center after scaling
-          const scaledCenter = center.clone().multiplyScalar(scale);
-          // Center vertically - no offset to show full object
-          clonedScene.position.set(-scaledCenter.x, -scaledCenter.y, -scaledCenter.z);
-          
-          // Reset rotation to ensure proper orientation
-          clonedScene.rotation.set(0, 0, 0);
-          
-          console.log('Model scaled by:', scale, 'Centered at:', clonedScene.position);
-          
-          setModel(clonedScene);
-          
-          // Extract geometry and material from the model if needed
-          clonedScene.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
-              if (child.geometry) setGeometry(child.geometry);
-              if (child.material) {
-                if (Array.isArray(child.material)) {
-                  setMaterial(child.material[0]);
-                } else {
-                  setMaterial(child.material);
+          try {
+            const clonedScene = gltf.scene.clone();
+            
+            // Calculate bounding box to scale and center model
+            const box = new THREE.Box3().setFromObject(clonedScene);
+            const size = box.getSize(new THREE.Vector3());
+            const center = box.getCenter(new THREE.Vector3());
+            
+            // Scale model to fit nicely in view (target height ~2.2 units to fit in circle)
+            const targetHeight = 2.2;
+            const scale = targetHeight / size.y;
+            
+            // Apply scale uniformly
+            clonedScene.scale.set(scale, scale, scale);
+            
+            // Center the model at origin by moving it
+            const scaledCenter = center.clone().multiplyScalar(scale);
+            clonedScene.position.set(-scaledCenter.x, -scaledCenter.y, -scaledCenter.z);
+            
+            // Reset rotation to ensure proper orientation
+            clonedScene.rotation.set(0, 0, 0);
+            
+            setModel(clonedScene);
+            
+            // Extract geometry and material from the model if needed
+            clonedScene.traverse((child) => {
+              if (child instanceof THREE.Mesh) {
+                if (child.geometry) setGeometry(child.geometry);
+                if (child.material) {
+                  if (Array.isArray(child.material)) {
+                    setMaterial(child.material[0]);
+                  } else {
+                    setMaterial(child.material);
+                  }
                 }
               }
-            }
-          });
+            });
+          } catch (error) {
+            console.error('Error processing GLB model:', error);
+            setModel(null);
+          }
         },
         (progress) => {
-          console.log('Loading progress:', (progress.loaded / progress.total) * 100 + '%');
+          // Throttle progress logging - only log every 10% or if total is invalid
+          if (progress.total > 0) {
+            const percent = (progress.loaded / progress.total) * 100;
+            // Only log at milestones to reduce console spam
+            if (percent - lastProgressLog >= 10 || percent >= 100) {
+              lastProgressLog = percent;
+            }
+          }
         },
         (error) => {
-          console.error('Failed to load GLB model:', error);
+          if (!isCancelled) {
+            console.error('Failed to load GLB model:', error);
+            setModel(null);
+          }
         }
       );
+
+      return () => {
+        isCancelled = true;
+      };
     } else {
       // Clear model if modelUrl is removed
       setModel(null);

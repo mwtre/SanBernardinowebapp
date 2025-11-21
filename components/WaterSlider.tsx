@@ -64,39 +64,14 @@ export default function WaterSlider() {
   const ratioRef = useRef(0);
   const windowWidthRef = useRef(0);
   const isHorizontalSwipe = useRef(false);
+  const backgroundRef = useRef<HTMLDivElement>(null);
 
-  // Use IntersectionObserver to only change background when WaterSlider is in view
+  // Update only the WaterSlider's background container, not the whole app
   useEffect(() => {
-    const sliderContainer = wrapperRef.current;
-    if (!sliderContainer) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Only change background when WaterSlider is visible
-            document.body.style.backgroundColor = BODY_BACKGROUNDS[currentIndex];
-            document.body.style.transition = 'background-color 0.2s';
-          } else {
-            // Reset to blue when not in view
-            document.body.style.backgroundColor = '#26b4f4';
-            document.body.style.transition = 'background-color 0.3s';
-          }
-        });
-      },
-      {
-        threshold: 0.1, // Trigger when 10% visible
-        rootMargin: '0px',
-      }
-    );
-
-    observer.observe(sliderContainer);
-
-    return () => {
-      observer.disconnect();
-      // Reset to blue on unmount
-      document.body.style.backgroundColor = '#26b4f4';
-    };
+    if (backgroundRef.current) {
+      backgroundRef.current.style.backgroundColor = BODY_BACKGROUNDS[currentIndex];
+      backgroundRef.current.style.transition = 'background-color 0.3s ease';
+    }
   }, [currentIndex]);
 
   const moveCard = (diff: number) => {
@@ -354,20 +329,42 @@ export default function WaterSlider() {
 
   return (
     <div 
-      className="relative overflow-x-hidden overflow-y-hidden w-full h-full" 
-      style={{ 
-        minHeight: '400px',
-        maxHeight: '500px',
-        touchAction: 'pan-y pinch-zoom', // Allow vertical scroll but handle horizontal swipes
+      className="relative w-full"
+      style={{
         position: 'relative',
         zIndex: 1,
         isolation: 'isolate',
-        paddingTop: '20px',
-        paddingBottom: '20px'
+        padding: '20px 0',
+        margin: '0 auto'
       }}
     >
-      {/* Swipe to Discover Indicator */}
-      <div className="absolute top-4 md:top-6 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-2 md:gap-3 text-white text-sm md:text-base lg:text-lg font-medium drop-shadow-lg px-4">
+      {/* Background container - only this changes color */}
+      <div 
+        ref={backgroundRef}
+        className="absolute inset-0 rounded-2xl"
+        style={{ 
+          backgroundColor: BODY_BACKGROUNDS[currentIndex],
+          transition: 'background-color 0.3s ease',
+          zIndex: 0,
+          minHeight: '100%'
+        }}
+      />
+      
+      {/* Content container */}
+      <div 
+        className="relative overflow-x-hidden overflow-y-hidden w-full h-full" 
+        style={{ 
+          minHeight: '400px',
+          maxHeight: '500px',
+          touchAction: 'pan-y pinch-zoom',
+          position: 'relative',
+          zIndex: 2,
+          paddingTop: '20px',
+          paddingBottom: '20px'
+        }}
+      >
+        {/* Swipe to Discover Indicator */}
+        <div className="absolute top-4 md:top-6 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-2 md:gap-3 text-white text-sm md:text-base lg:text-lg font-medium drop-shadow-lg px-4">
         <svg 
           className="w-6 h-6 md:w-7 md:h-7 animate-pulse" 
           fill="none" 
@@ -483,16 +480,17 @@ export default function WaterSlider() {
         ))}
       </div>
 
-      {/* Placeholder Indicators */}
-      <div className="cards-placeholder block relative mb-4 text-center mt-[400px] md:mt-[500px]">
-        {products.map((_, index) => (
-          <div
-            key={index}
-            className={`cards-placeholder__item inline-block mr-2.5 bg-white w-[30px] h-[5px] rounded-[5px] transition-opacity duration-200 ${
-              index === currentIndex ? 'opacity-100' : 'opacity-30'
-            }`}
-          />
-        ))}
+        {/* Placeholder Indicators */}
+        <div className="cards-placeholder block relative mb-4 text-center mt-[400px] md:mt-[500px]">
+          {products.map((_, index) => (
+            <div
+              key={index}
+              className={`cards-placeholder__item inline-block mr-2.5 bg-white w-[30px] h-[5px] rounded-[5px] transition-opacity duration-200 ${
+                index === currentIndex ? 'opacity-100' : 'opacity-30'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

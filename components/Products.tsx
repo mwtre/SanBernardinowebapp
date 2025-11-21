@@ -2,9 +2,10 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Suspense, lazy } from 'react';
+import { Suspense } from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
 import Bottle3DViewer from './Bottle3DViewer';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const products = [
   {
@@ -55,6 +56,8 @@ const products = [
 ];
 
 export default function Products() {
+  const isMobile = useIsMobile();
+  
   return (
     <section 
       className="relative w-full overflow-hidden" 
@@ -135,15 +138,21 @@ export default function Products() {
                       <Suspense
                         fallback={
                           <div className="w-full h-full flex items-center justify-center bg-gray-200/20 rounded-lg">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
                           </div>
                         }
                       >
-                        <Bottle3DViewer
-                          bottleType={product.type as 'still' | 'sparkling' | 'extra-sparkling'}
-                          showControls={false}
-                          modelUrl="/SanBernardinowebapp/models/hitem3d.glb"
-                        />
+                        {!isMobile ? (
+                          <Bottle3DViewer
+                            bottleType={product.type as 'still' | 'sparkling' | 'extra-sparkling'}
+                            showControls={false}
+                            modelUrl="/SanBernardinowebapp/models/hitem3d.glb"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200/20 rounded-lg">
+                            <span className="text-white text-xs font-semibold">{product.name}</span>
+                          </div>
+                        )}
                       </Suspense>
                     </ErrorBoundary>
                   </div>

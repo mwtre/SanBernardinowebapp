@@ -72,7 +72,7 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* Water Slider - Isolated section */}
+          {/* Water Slider - Isolated section with its own background */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -81,7 +81,10 @@ export default function Hero() {
             style={{ 
               position: 'relative',
               zIndex: 15,
-              isolation: 'isolate'
+              isolation: 'isolate',
+              padding: '20px 0',
+              margin: '20px auto',
+              maxWidth: '100%'
             }}
           >
             <WaterSlider />
