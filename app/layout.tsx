@@ -4,6 +4,7 @@ import './globals.css';
 import { Providers } from './providers';
 import RippleBackground from '@/components/RippleBackground';
 import BubblesBackground from '@/components/BubblesBackground';
+import ErrorSuppression from '@/components/ErrorSuppression';
 
 const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ 
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="it">
       <body className={`${inter.className} ${playfair.variable}`}>
+        <ErrorSuppression />
         <RippleBackground />
         <BubblesBackground />
         <div style={{ position: 'relative', zIndex: 10, minHeight: '100vh' }}>
