@@ -94,11 +94,19 @@ export default function MountainSignParallax({
           if (!svg) return;
           
           const sky = svg.querySelector('.sky') as SVGImageElement;
+          const cloud1 = svg.querySelector('.cloud1') as SVGImageElement;
+          const cloud2 = svg.querySelector('.cloud2') as SVGImageElement;
+          const cloud3 = svg.querySelector('.cloud3') as SVGImageElement;
           const mountainBg = svg.querySelector('.mountainBg') as SVGImageElement;
+          const mountainMg = svg.querySelector('.mountainMg') as SVGImageElement;
           const mountainFg = svg.querySelector('.mountainFg') as SVGImageElement;
           
           if (sky) sky.style.transform = `translateY(${-scrollProgress * 100}px)`;
+          if (cloud1) cloud1.style.transform = `translateY(${-scrollProgress * 400}px)`;
+          if (cloud2) cloud2.style.transform = `translateY(${-scrollProgress * 250}px)`;
+          if (cloud3) cloud3.style.transform = `translateY(${-scrollProgress * 325}px)`;
           if (mountainBg) mountainBg.style.transform = `translateY(${-scrollProgress * 50}px)`;
+          if (mountainMg) mountainMg.style.transform = `translateY(${-scrollProgress * 125}px)`;
           if (mountainFg) mountainFg.style.transform = `translateY(${-scrollProgress * 200}px)`;
         } catch (error) {
           console.error('Mountain parallax scroll error:', error);
@@ -136,19 +144,34 @@ export default function MountainSignParallax({
       },
     });
 
-    // Parallax animations - using mountain sign as background, middle, and foreground layers
-    tl.fromTo(
-      '.sky',
-      { y: 0 },
-      { y: -200 },
-      0
-    )
-      .fromTo('.cloud1', { y: 100 }, { y: -800 }, 0)
-      .fromTo('.cloud2', { y: -150 }, { y: -500 }, 0)
-      .fromTo('.cloud3', { y: -50 }, { y: -650 }, 0)
-      .fromTo('.mountainBg', { y: -10 }, { y: -100 }, 0)
-      .fromTo('.mountainMg', { y: -30 }, { y: -250 }, 0)
-      .fromTo('.mountainFg', { y: -50 }, { y: -600 }, 0);
+    // Parallax animations - using direct element references for better reliability
+    const svg = svgRef.current;
+    if (svg) {
+      const skyEl = svg.querySelector('.sky');
+      const cloud1El = svg.querySelector('.cloud1');
+      const cloud2El = svg.querySelector('.cloud2');
+      const cloud3El = svg.querySelector('.cloud3');
+      const mountainBgEl = svg.querySelector('.mountainBg');
+      const mountainMgEl = svg.querySelector('.mountainMg');
+      const mountainFgEl = svg.querySelector('.mountainFg');
+      
+      if (skyEl) tl.fromTo(skyEl, { y: 0 }, { y: -200 }, 0);
+      if (cloud1El) tl.fromTo(cloud1El, { y: 100 }, { y: -800 }, 0);
+      if (cloud2El) tl.fromTo(cloud2El, { y: -150 }, { y: -500 }, 0);
+      if (cloud3El) tl.fromTo(cloud3El, { y: -50 }, { y: -650 }, 0);
+      if (mountainBgEl) tl.fromTo(mountainBgEl, { y: -10 }, { y: -100 }, 0);
+      if (mountainMgEl) tl.fromTo(mountainMgEl, { y: -30 }, { y: -250 }, 0);
+      if (mountainFgEl) tl.fromTo(mountainFgEl, { y: -50 }, { y: -600 }, 0);
+    } else {
+      // Fallback to class selectors
+      tl.fromTo('.sky', { y: 0 }, { y: -200 }, 0)
+        .fromTo('.cloud1', { y: 100 }, { y: -800 }, 0)
+        .fromTo('.cloud2', { y: -150 }, { y: -500 }, 0)
+        .fromTo('.cloud3', { y: -50 }, { y: -650 }, 0)
+        .fromTo('.mountainBg', { y: -10 }, { y: -100 }, 0)
+        .fromTo('.mountainMg', { y: -30 }, { y: -250 }, 0)
+        .fromTo('.mountainFg', { y: -50 }, { y: -600 }, 0);
+    }
 
     // Arrow button interactions
     if (arrowBtn && arrow && showArrow) {
@@ -233,9 +256,11 @@ export default function MountainSignParallax({
           style={{
             width: '100%',
             height: '100%',
+            maxHeight: '100vh',
             position: 'absolute',
             top: 0,
             left: 0,
+            objectFit: 'cover',
           }}
         >
           {/* Mask for cloud effect */}
@@ -258,6 +283,7 @@ export default function MountainSignParallax({
             width="1200"
             height="590"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
 
           {/* Mountain sign layers - using the same image for depth effect */}
@@ -267,6 +293,7 @@ export default function MountainSignParallax({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
           <image
             className="mountainMg"
@@ -274,6 +301,7 @@ export default function MountainSignParallax({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
 
           {/* Cloud layers */}
@@ -283,6 +311,7 @@ export default function MountainSignParallax({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
           <image
             className="mountainFg"
@@ -290,6 +319,7 @@ export default function MountainSignParallax({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
           <image
             className="cloud1"
@@ -297,6 +327,7 @@ export default function MountainSignParallax({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
           <image
             className="cloud3"
@@ -304,6 +335,7 @@ export default function MountainSignParallax({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
 
           {/* Text */}
