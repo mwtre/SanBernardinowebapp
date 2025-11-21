@@ -63,15 +63,15 @@ export default function Products() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg px-4">
             First Web3 Water Integration
           </h2>
-          <p className="text-xl text-white max-w-2xl mx-auto drop-shadow-md">
+          <p className="text-base sm:text-lg md:text-xl text-white max-w-2xl mx-auto drop-shadow-md px-4">
             Mint Exclusive NFT. Choose your rarity and certify your bottle as a unique digital asset.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto px-4">
           {products.map((product, index) => (
             <motion.div
               key={product.name}
@@ -80,7 +80,7 @@ export default function Products() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="flex justify-center relative"
-              style={{ paddingTop: '60px', paddingBottom: '20px' }}
+              style={{ paddingTop: '30px', paddingBottom: '15px' }}
             >
               {/* Neumorphic NFT Card with Water-style Opacity */}
               <div 

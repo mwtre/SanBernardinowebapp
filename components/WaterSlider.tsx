@@ -63,10 +63,38 @@ export default function WaterSlider() {
   const ratioRef = useRef(0);
   const windowWidthRef = useRef(0);
 
+  // Use IntersectionObserver to only change background when WaterSlider is in view
   useEffect(() => {
-    // Set body background color
-    document.body.style.backgroundColor = BODY_BACKGROUNDS[currentIndex];
-    document.body.style.transition = 'background-color 0.2s';
+    const sliderContainer = wrapperRef.current;
+    if (!sliderContainer) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Only change background when WaterSlider is visible
+            document.body.style.backgroundColor = BODY_BACKGROUNDS[currentIndex];
+            document.body.style.transition = 'background-color 0.2s';
+          } else {
+            // Reset to blue when not in view
+            document.body.style.backgroundColor = '#26b4f4';
+            document.body.style.transition = 'background-color 0.3s';
+          }
+        });
+      },
+      {
+        threshold: 0.1, // Trigger when 10% visible
+        rootMargin: '0px',
+      }
+    );
+
+    observer.observe(sliderContainer);
+
+    return () => {
+      observer.disconnect();
+      // Reset to blue on unmount
+      document.body.style.backgroundColor = '#26b4f4';
+    };
   }, [currentIndex]);
 
   const moveCard = (diff: number) => {
@@ -303,9 +331,9 @@ export default function WaterSlider() {
   }, [isDragging, startX, currentX, currentIndex]);
 
   return (
-    <div className="relative overflow-x-hidden w-full h-full min-h-[600px]">
+    <div className="relative overflow-x-hidden w-full h-full min-h-[500px] md:min-h-[600px]">
       {/* Swipe to Discover Indicator */}
-      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-3 text-white text-base md:text-lg font-medium drop-shadow-lg">
+      <div className="absolute top-4 md:top-6 left-1/2 transform -translate-x-1/2 z-30 flex items-center gap-2 md:gap-3 text-white text-sm md:text-base lg:text-lg font-medium drop-shadow-lg px-4">
         <svg 
           className="w-6 h-6 md:w-7 md:h-7 animate-pulse" 
           fill="none" 
@@ -340,7 +368,7 @@ export default function WaterSlider() {
             ref={(el) => {
               if (el) cardsRef.current[index] = el;
             }}
-            className={`card absolute top-6 mx-auto w-[380px] bg-white rounded-[15px] select-none overflow-visible ${
+            className={`card absolute top-4 md:top-6 mx-auto w-[280px] sm:w-[320px] md:w-[380px] bg-white rounded-[12px] md:rounded-[15px] select-none overflow-visible ${
               index === currentIndex 
                 ? 'shadow-[0_40px_60px_rgba(0,0,0,0.4)] scale-100 z-20' 
                 : index < currentIndex
@@ -358,7 +386,7 @@ export default function WaterSlider() {
           >
             {/* Card Header */}
             <div
-              className="card__header relative h-[170px] px-[30px] pb-[300px] rounded-t-[15px] text-white"
+              className="card__header relative h-[140px] sm:h-[150px] md:h-[170px] px-[20px] sm:px-[25px] md:px-[30px] pb-[250px] sm:pb-[280px] md:pb-[300px] rounded-t-[12px] md:rounded-t-[15px] text-white"
               style={{
                 background: product.headerGradient,
               }}
@@ -366,7 +394,7 @@ export default function WaterSlider() {
               {/* Watermark */}
               <div className="card__watermark overflow-hidden absolute bottom-[10px] left-0 w-full">
                 <div
-                  className="relative left-[-20px] text-black/30 text-[160px] font-bold uppercase"
+                  className="relative left-[-20px] text-black/30 text-[100px] sm:text-[120px] md:text-[160px] font-bold uppercase"
                   style={{ fontFamily: 'var(--font-playfair), serif' }}
                 >
                   {product.watermark}
@@ -374,37 +402,38 @@ export default function WaterSlider() {
               </div>
 
               {/* Logo placeholder - you can add your logo here */}
-              <div className="card__logo card__will-animate w-[40px] h-auto mb-3">
-                <span className="text-white text-lg font-bold">SB</span>
+              <div className="card__logo card__will-animate w-[30px] sm:w-[35px] md:w-[40px] h-auto mb-2 md:mb-3">
+                <span className="text-white text-base sm:text-lg font-bold">SB</span>
               </div>
 
               {/* Title and Subtitle */}
-              <h1 className="card__title card__will-animate my-[25px] mb-3 text-[12px] leading-[1.1em] uppercase tracking-[1px] font-bold text-left">
+              <h1 className="card__title card__will-animate my-[20px] sm:my-[22px] md:my-[25px] mb-2 md:mb-3 text-[10px] sm:text-[11px] md:text-[12px] leading-[1.1em] uppercase tracking-[1px] font-bold text-left">
                 {product.name}
               </h1>
-              <span className="card__subtitle card__will-animate block text-[11px] font-light text-left">
+              <span className="card__subtitle card__will-animate block text-[9px] sm:text-[10px] md:text-[11px] font-light text-left">
                 {product.subtitle}
               </span>
             </div>
 
             {/* Card Body */}
-            <div className="card__body relative px-[30px] pt-10 pb-5 overflow-visible">
+            <div className="card__body relative px-[20px] sm:px-[25px] md:px-[30px] pt-8 md:pt-10 pb-4 md:pb-5 overflow-visible">
               {/* Product Image */}
               <Image
                 src={product.image}
                 alt={product.name}
                 width={6000}
                 height={6000}
-                className="card__image card__will-animate z-10 absolute top-[-250px] left-[150px] select-none pointer-events-none"
+                className="card__image card__will-animate z-10 absolute top-[-180px] sm:top-[-200px] md:top-[-250px] left-[80px] sm:left-[100px] md:left-[150px] select-none pointer-events-none"
                 style={{ 
-                  width: '2000px',
+                  width: '1200px',
+                  maxWidth: 'none',
                   height: 'auto',
                   userSelect: 'none',
                   pointerEvents: 'none',
                   filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))',
                   WebkitUserDrag: 'none' as any,
                   draggable: false,
-                  transform: 'scale(1.5)',
+                  transform: 'scale(1.2)',
                   transformOrigin: 'center center',
                 } as React.CSSProperties}
                 priority={index === 0}
@@ -412,7 +441,7 @@ export default function WaterSlider() {
               />
 
               {/* Category */}
-              <span className="card__category card__will-animate block text-[10px] text-[#AEAEAE] uppercase text-center mt-4">
+              <span className="card__category card__will-animate block text-[9px] sm:text-[10px] text-[#AEAEAE] uppercase text-center mt-3 md:mt-4">
                 {product.category}
               </span>
             </div>
@@ -421,7 +450,7 @@ export default function WaterSlider() {
       </div>
 
       {/* Placeholder Indicators */}
-      <div className="cards-placeholder block relative mb-4 text-center mt-[600px]">
+      <div className="cards-placeholder block relative mb-4 text-center mt-[500px] md:mt-[600px]">
         {products.map((_, index) => (
           <div
             key={index}

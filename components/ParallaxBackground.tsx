@@ -108,13 +108,16 @@ export default function ParallaxBackground({
     if (!scrollDist) return;
 
     // Create GSAP timeline with ScrollTrigger
+    // Using scrub: true (smooth) instead of scrub: 1 to fix lag when scrolling back up
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: scrollDist,
         start: scrollStart,
         end: scrollEnd,
-        scrub: 1,
+        scrub: true, // Smooth scrubbing, no lag
         invalidateOnRefresh: true,
+        refreshPriority: -1, // Lower priority for better performance
+        anticipatePin: 1, // Anticipate pinning for smoother scrolling
       },
     });
 

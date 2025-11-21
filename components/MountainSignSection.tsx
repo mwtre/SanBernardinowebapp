@@ -34,12 +34,12 @@ export default function MountainSignSection() {
           transition={{ duration: 0.8 }}
           className="text-center w-full max-w-4xl"
         >
-          <h1 className="text-5xl md:text-7xl font-bold text-black mb-6" style={{ fontFamily: 'var(--font-playfair), serif' }}>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-black mb-4 md:mb-6 px-4" style={{ fontFamily: 'var(--font-playfair), serif' }}>
             Sustainable
             <br />
             <span className="text-black">Elegance</span>
           </h1>
-          <p className="text-xl md:text-2xl text-black mb-8 max-w-3xl mx-auto" style={{ fontFamily: 'var(--font-playfair), serif' }}>
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-black mb-6 md:mb-8 max-w-3xl mx-auto px-4" style={{ fontFamily: 'var(--font-playfair), serif' }}>
             From the beginning, we chose to eliminate plastic, adopting materials that respect the environment while reflecting our product's purity. The glass bottle and aluminum cap embody our values: transparency, lightness, and recyclability.
             <br />
             <br />
