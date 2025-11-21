@@ -1,10 +1,12 @@
 'use client';
 
+import { assetPath } from '@/lib/paths';
+
 export default function SanBernardino3D() {
   return (
     <div className="w-full flex items-center justify-center pb-0">
       <img 
-        src="/models/tranlogo.png" 
+        src={assetPath("/models/tranlogo.png")} 
         alt="San Bernardino Logo"
         className="object-contain"
         style={{ 

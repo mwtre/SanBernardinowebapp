@@ -55,7 +55,7 @@ interface MountainSignParallaxProps {
 export default function MountainSignParallax({
   id = 'mountain-sign',
   scrollHeight = '200vh',
-  mountainSignImage = '/models/sing of the moutain .jpg',
+  mountainSignImage = '/SanBernardinowebapp/models/sing of the moutain .jpg',
   cloud1Image = 'https://assets.codepen.io/721952/cloud1.png',
   cloud2Image = 'https://assets.codepen.io/721952/cloud2.png',
   cloud3Image = 'https://assets.codepen.io/721952/cloud3.png',

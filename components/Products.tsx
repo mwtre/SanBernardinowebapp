@@ -112,7 +112,7 @@ export default function Products() {
                     <Bottle3DViewer
                       bottleType={product.type as 'still' | 'sparkling' | 'extra-sparkling'}
                       showControls={false}
-                      modelUrl="/models/hitem3d.glb"
+                      modelUrl="/SanBernardinowebapp/models/hitem3d.glb"
                     />
                   </div>
                 </div>
