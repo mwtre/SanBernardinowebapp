@@ -454,17 +454,19 @@ export default function WaterSlider() {
                 alt={product.name}
                 width={6000}
                 height={6000}
-                className="card__image card__will-animate z-10 absolute top-[-180px] sm:top-[-200px] md:top-[-250px] left-[80px] sm:left-[100px] md:left-[150px] select-none pointer-events-none"
+                className="card__image card__will-animate z-10 absolute select-none pointer-events-none"
                 style={{ 
-                  width: '1200px',
-                  maxWidth: 'none',
+                  width: 'clamp(200px, 50vw, 400px)',
+                  maxWidth: '400px',
                   height: 'auto',
+                  top: 'clamp(-120px, -15vw, -180px)',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
                   userSelect: 'none',
                   pointerEvents: 'none',
                   filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))',
                   WebkitUserDrag: 'none' as any,
                   draggable: false,
-                  transform: 'scale(1.2)',
                   transformOrigin: 'center center',
                 } as React.CSSProperties}
                 priority={index === 0}

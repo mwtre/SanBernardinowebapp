@@ -122,10 +122,16 @@ export default function ParallaxBackground({
           if (!svg) return;
           
           const sky = svg.querySelector('.sky') as SVGImageElement;
+          const cloud1 = svg.querySelector('.cloud1') as SVGImageElement;
+          const cloud2 = svg.querySelector('.cloud2') as SVGImageElement;
+          const cloud3 = svg.querySelector('.cloud3') as SVGImageElement;
           const mountBg = svg.querySelector('.mountBg') as SVGImageElement;
           const mountFg = svg.querySelector('.mountFg') as SVGImageElement;
           
           if (sky) sky.style.transform = `translateY(${-scrollProgress * 100}px)`;
+          if (cloud1) cloud1.style.transform = `translateY(${-scrollProgress * 400}px)`;
+          if (cloud2) cloud2.style.transform = `translateY(${-scrollProgress * 250}px)`;
+          if (cloud3) cloud3.style.transform = `translateY(${-scrollProgress * 325}px)`;
           if (mountBg) mountBg.style.transform = `translateY(${-scrollProgress * 50}px)`;
           if (mountFg) mountFg.style.transform = `translateY(${-scrollProgress * 200}px)`;
         } catch (error) {
@@ -170,18 +176,34 @@ export default function ParallaxBackground({
 
     // Default parallax animations
     if (!layers) {
-      tl.fromTo(
-        '.sky',
-        { y: 0 },
-        { y: -200 },
-        0
-      )
-        .fromTo('.cloud1', { y: 100 }, { y: -800 }, 0)
-        .fromTo('.cloud2', { y: -150 }, { y: -500 }, 0)
-        .fromTo('.cloud3', { y: -50 }, { y: -650 }, 0)
-        .fromTo('.mountBg', { y: -10 }, { y: -100 }, 0)
-        .fromTo('.mountMg', { y: -30 }, { y: -250 }, 0)
-        .fromTo('.mountFg', { y: -50 }, { y: -600 }, 0);
+      // Use SVG-specific selectors to ensure clouds are found
+      const svg = svgRef.current;
+      if (svg) {
+        const cloud1El = svg.querySelector('.cloud1');
+        const cloud2El = svg.querySelector('.cloud2');
+        const cloud3El = svg.querySelector('.cloud3');
+        const skyEl = svg.querySelector('.sky');
+        const mountBgEl = svg.querySelector('.mountBg');
+        const mountMgEl = svg.querySelector('.mountMg');
+        const mountFgEl = svg.querySelector('.mountFg');
+        
+        if (skyEl) tl.fromTo(skyEl, { y: 0 }, { y: -200 }, 0);
+        if (cloud1El) tl.fromTo(cloud1El, { y: 100 }, { y: -800 }, 0);
+        if (cloud2El) tl.fromTo(cloud2El, { y: -150 }, { y: -500 }, 0);
+        if (cloud3El) tl.fromTo(cloud3El, { y: -50 }, { y: -650 }, 0);
+        if (mountBgEl) tl.fromTo(mountBgEl, { y: -10 }, { y: -100 }, 0);
+        if (mountMgEl) tl.fromTo(mountMgEl, { y: -30 }, { y: -250 }, 0);
+        if (mountFgEl) tl.fromTo(mountFgEl, { y: -50 }, { y: -600 }, 0);
+      } else {
+        // Fallback to class selectors if SVG not ready
+        tl.fromTo('.sky', { y: 0 }, { y: -200 }, 0)
+          .fromTo('.cloud1', { y: 100 }, { y: -800 }, 0)
+          .fromTo('.cloud2', { y: -150 }, { y: -500 }, 0)
+          .fromTo('.cloud3', { y: -50 }, { y: -650 }, 0)
+          .fromTo('.mountBg', { y: -10 }, { y: -100 }, 0)
+          .fromTo('.mountMg', { y: -30 }, { y: -250 }, 0)
+          .fromTo('.mountFg', { y: -50 }, { y: -600 }, 0);
+      }
     } else {
       // Custom layers configuration
       layers.forEach((layer) => {
@@ -330,6 +352,7 @@ export default function ParallaxBackground({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
           <image
             className="mountFg"
@@ -345,6 +368,7 @@ export default function ParallaxBackground({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
           <image
             className="cloud3"
@@ -352,6 +376,7 @@ export default function ParallaxBackground({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
 
           {/* Text */}
