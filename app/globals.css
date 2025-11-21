@@ -82,6 +82,7 @@ canvas#canvas {
   width: 100%;
   max-width: 450px;
   height: 160px;
+  min-height: 160px;
   border-radius: 16px;
   box-shadow: 
     inset 20px 20px 20px rgba(0, 0, 0, 0.05),
@@ -95,11 +96,20 @@ canvas#canvas {
   will-change: height, border-radius;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  margin: 0 auto;
+}
+
+@media (min-width: 375px) {
+  .nft-card {
+    height: 170px;
+    min-height: 170px;
+  }
 }
 
 @media (min-width: 640px) {
   .nft-card {
     height: 175px;
+    min-height: 175px;
     border-radius: 18px;
   }
 }
@@ -107,6 +117,7 @@ canvas#canvas {
 @media (min-width: 768px) {
   .nft-card {
     height: 190px;
+    min-height: 190px;
     border-radius: 20px;
   }
 }
@@ -159,10 +170,19 @@ canvas#canvas {
 .nft-card-3d-box {
   position: absolute;
   left: 50%;
-  top: -40px;
+  top: -35px;
   transform: translateX(-50%);
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
+  aspect-ratio: 1 / 1;
+}
+
+@media (min-width: 375px) {
+  .nft-card-3d-box {
+    top: -38px;
+    width: 110px;
+    height: 110px;
+  }
 }
 
 @media (min-width: 640px) {

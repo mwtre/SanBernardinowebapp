@@ -69,7 +69,13 @@ export default function Bottle3DViewer({
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="relative"
+        className="relative w-full h-full"
+        style={{ 
+          width: '100%', 
+          height: '100%',
+          minHeight: '100%',
+          aspectRatio: '1 / 1'
+        }}
       >
         {viewMode === '3d' ? (
           <Bottle3D

@@ -54,8 +54,8 @@ const products = [
 
 export default function Products() {
   return (
-    <section className="py-20 relative z-10">
-      <div className="container mx-auto px-4">
+    <section className="py-12 sm:py-16 md:py-20 relative z-10 w-full overflow-hidden" id="products-section">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -71,7 +71,7 @@ export default function Products() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
           {products.map((product, index) => (
             <motion.div
               key={product.name}
@@ -79,8 +79,8 @@ export default function Products() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="flex justify-center relative"
-              style={{ paddingTop: '30px', paddingBottom: '15px' }}
+              className="flex justify-center items-center relative w-full"
+              style={{ paddingTop: '20px', paddingBottom: '20px', minHeight: '100%' }}
             >
               {/* Neumorphic NFT Card with Water-style Opacity */}
               <div 
@@ -99,14 +99,16 @@ export default function Products() {
                 }}
               >
                 {/* 3D Object Box - Positioned at top, scales on hover */}
-                <div className="nft-card-3d-box" style={{ overflow: 'visible', clipPath: 'none' }}>
+                <div className="nft-card-3d-box" style={{ overflow: 'visible', clipPath: 'none', position: 'relative' }}>
                   <div 
                     className="w-full h-full flex items-center justify-center" 
                     style={{ 
                       overflow: 'visible', 
                       width: '100%', 
                       height: '100%',
-                      transformOrigin: 'center center'
+                      transformOrigin: 'center center',
+                      position: 'relative',
+                      aspectRatio: '1 / 1'
                     }}
                   >
                     <Bottle3DViewer
@@ -123,7 +125,7 @@ export default function Products() {
                     {/* Title and Description with Rarity Glow */}
                     <h2 
                       style={{ 
-                        fontSize: '1.25em', 
+                        fontSize: 'clamp(1em, 4vw, 1.25em)', 
                         fontWeight: 500, 
                         color: '#fff', 
                         lineHeight: 1.2,
@@ -136,7 +138,7 @@ export default function Products() {
                     >
                       {product.name}
                       <br />
-                      <span style={{ fontSize: '0.75em', fontWeight: 400, opacity: 0.6 }}>
+                      <span style={{ fontSize: 'clamp(0.65em, 3vw, 0.75em)', fontWeight: 400, opacity: 0.6 }}>
                         {product.description} • {product.sizes}
                       </span>
                     </h2>
@@ -145,7 +147,7 @@ export default function Products() {
                     <div className="nft-card-data">
                       <div>
                         <h3 style={{ 
-                          fontSize: '1em', 
+                          fontSize: 'clamp(0.85em, 3.5vw, 1em)', 
                           color: '#fff', 
                           lineHeight: '1.2em', 
                           fontWeight: 500,
@@ -157,12 +159,12 @@ export default function Products() {
                         }}>
                           {product.minted.toLocaleString()}
                           <br />
-                          <span style={{ fontSize: '0.85em', fontWeight: 300, opacity: 0.6 }}>Minted</span>
+                          <span style={{ fontSize: 'clamp(0.7em, 3vw, 0.85em)', fontWeight: 300, opacity: 0.6 }}>Minted</span>
                         </h3>
                       </div>
                       <div>
                         <h3 style={{ 
-                          fontSize: '1em', 
+                          fontSize: 'clamp(0.85em, 3.5vw, 1em)', 
                           color: '#fff', 
                           lineHeight: '1.2em', 
                           fontWeight: 500,
@@ -174,12 +176,12 @@ export default function Products() {
                         }}>
                           {product.supply.toLocaleString()}
                           <br />
-                          <span style={{ fontSize: '0.85em', fontWeight: 300, opacity: 0.6 }}>Supply</span>
+                          <span style={{ fontSize: 'clamp(0.7em, 3vw, 0.85em)', fontWeight: 300, opacity: 0.6 }}>Supply</span>
                         </h3>
                       </div>
                       <div>
                         <h3 style={{ 
-                          fontSize: '1em', 
+                          fontSize: 'clamp(0.85em, 3.5vw, 1em)', 
                           color: '#fff', 
                           lineHeight: '1.2em', 
                           fontWeight: 500,
@@ -191,16 +193,16 @@ export default function Products() {
                         }}>
                           {product.rarityLabel}
                           <br />
-                          <span style={{ fontSize: '0.85em', fontWeight: 300, opacity: 0.6 }}>Rarity</span>
+                          <span style={{ fontSize: 'clamp(0.7em, 3vw, 0.85em)', fontWeight: 300, opacity: 0.6 }}>Rarity</span>
                         </h3>
                       </div>
                     </div>
 
                     {/* Price and Action Buttons */}
-                    <div className="nft-card-action-btn">
+                    <div className="nft-card-action-btn flex-wrap gap-2">
                       <Link
                         href={`/mint?type=${product.type}&rarity=${product.rarity}`}
-                        className="px-5 py-2 rounded-md outline-none border-none text-sm font-medium bg-white cursor-pointer shadow-lg"
+                        className="px-4 sm:px-5 py-2 rounded-md outline-none border-none text-xs sm:text-sm font-medium bg-white cursor-pointer shadow-lg whitespace-nowrap"
                         style={{
                           color: product.rarityColor === 'bg-gray-500' ? '#269cd9' : 
                                  product.rarityColor === 'bg-blue-500' ? '#269cd9' : '#e58ce9'
@@ -210,7 +212,7 @@ export default function Products() {
                       </Link>
                       <Link
                         href={`/mint?type=${product.type}&rarity=${product.rarity}`}
-                        className="px-5 py-2 rounded-md outline-none border-2 text-sm font-medium bg-transparent text-white cursor-pointer"
+                        className="px-4 sm:px-5 py-2 rounded-md outline-none border-2 text-xs sm:text-sm font-medium bg-transparent text-white cursor-pointer whitespace-nowrap"
                         style={{
                           borderColor: product.rarityColor === 'bg-gray-500' ? '#9ca3af' : 
                                        product.rarityColor === 'bg-blue-500' ? '#60a5fa' : '#e58ce9'

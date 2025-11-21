@@ -261,15 +261,29 @@ export default function Bottle3D({
   modelUrl,
 }: Bottle3DProps) {
   return (
-    <div className="w-full h-full bg-transparent rounded-lg overflow-visible" style={{ height: '100%', minHeight: '100%' }}>
+    <div 
+      className="w-full h-full bg-transparent rounded-lg overflow-visible" 
+      style={{ 
+        width: '100%', 
+        height: '100%', 
+        minHeight: '100%',
+        position: 'relative',
+        aspectRatio: '1 / 1'
+      }}
+    >
       <Canvas 
         shadows
-        style={{ width: '100%', height: '100%' }}
+        style={{ 
+          width: '100%', 
+          height: '100%',
+          display: 'block'
+        }}
         gl={{ 
           alpha: true, 
           antialias: true,
           powerPreference: "high-performance"
         }}
+        dpr={[1, 2]} // Limit pixel ratio for better mobile performance
       >
         <PerspectiveCamera makeDefault position={[0, 0, 3]} fov={50} />
         
