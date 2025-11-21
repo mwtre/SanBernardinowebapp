@@ -402,11 +402,11 @@ export default function WaterSlider() {
                   userSelect: 'none',
                   pointerEvents: 'none',
                   filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))',
-                  WebkitUserDrag: 'none',
+                  WebkitUserDrag: 'none' as any,
                   draggable: false,
                   transform: 'scale(1.5)',
                   transformOrigin: 'center center',
-                }}
+                } as React.CSSProperties}
                 priority={index === 0}
                 draggable={false}
               />

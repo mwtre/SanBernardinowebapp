@@ -23,7 +23,8 @@ function BottleMesh({
   modelUrl,
   autoRotate = true
 }: Bottle3DProps) {
-  const meshRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
   const [geometry, setGeometry] = useState<THREE.BufferGeometry | null>(null);
   const [material, setMaterial] = useState<THREE.Material | null>(null);
   const [model, setModel] = useState<THREE.Group | null>(null);
@@ -235,7 +236,7 @@ function BottleMesh({
   // If we have a GLB model, render it directly
   if (model) {
     return (
-      <group ref={meshRef} position={[0, 0, 0]}>
+      <group ref={groupRef} position={[0, 0, 0]}>
         <primitive object={model} />
       </group>
     );
