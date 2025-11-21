@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
   webpack: (config, { isServer }) => {
     // Ignore Node.js modules that are not available in browser
     config.resolve.fallback = {
