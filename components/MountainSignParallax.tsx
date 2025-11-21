@@ -80,14 +80,59 @@ export default function MountainSignParallax({
 
     if (!scrollDist) return;
 
-    // Create GSAP timeline with ScrollTrigger
+    // Detect mobile device for performance optimization
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // On mobile, use simpler animation
+    if (isMobile) {
+      const handleScroll = () => {
+        try {
+          const rect = scrollDist.getBoundingClientRect();
+          const scrollProgress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / (rect.height + window.innerHeight)));
+          
+          const svg = svgRef.current;
+          if (!svg) return;
+          
+          const sky = svg.querySelector('.sky') as SVGImageElement;
+          const mountainBg = svg.querySelector('.mountainBg') as SVGImageElement;
+          const mountainFg = svg.querySelector('.mountainFg') as SVGImageElement;
+          
+          if (sky) sky.style.transform = `translateY(${-scrollProgress * 100}px)`;
+          if (mountainBg) mountainBg.style.transform = `translateY(${-scrollProgress * 50}px)`;
+          if (mountainFg) mountainFg.style.transform = `translateY(${-scrollProgress * 200}px)`;
+        } catch (error) {
+          console.error('Mountain parallax scroll error:', error);
+        }
+      };
+      
+      let ticking = false;
+      const throttledScroll = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            handleScroll();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+      
+      window.addEventListener('scroll', throttledScroll, { passive: true });
+      handleScroll();
+      
+      return () => {
+        window.removeEventListener('scroll', throttledScroll);
+      };
+    }
+
+    // Desktop: Use GSAP
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: scrollDist,
         start: scrollStart,
         end: scrollEnd,
-        scrub: 1,
+        scrub: 0.5, // Smoother
         invalidateOnRefresh: true,
+        markers: false,
       },
     });
 

@@ -107,17 +107,64 @@ export default function ParallaxBackground({
 
     if (!scrollDist) return;
 
+    // Detect mobile device for performance optimization
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // On mobile, use simpler animation with less layers
+    if (isMobile) {
+      // Simplified mobile parallax using CSS transforms
+      const handleScroll = () => {
+        try {
+          const rect = scrollDist.getBoundingClientRect();
+          const scrollProgress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / (rect.height + window.innerHeight)));
+          
+          const svg = svgRef.current;
+          if (!svg) return;
+          
+          const sky = svg.querySelector('.sky') as SVGImageElement;
+          const mountBg = svg.querySelector('.mountBg') as SVGImageElement;
+          const mountFg = svg.querySelector('.mountFg') as SVGImageElement;
+          
+          if (sky) sky.style.transform = `translateY(${-scrollProgress * 100}px)`;
+          if (mountBg) mountBg.style.transform = `translateY(${-scrollProgress * 50}px)`;
+          if (mountFg) mountFg.style.transform = `translateY(${-scrollProgress * 200}px)`;
+        } catch (error) {
+          console.error('Parallax scroll error:', error);
+        }
+      };
+      
+      // Throttle scroll events for better performance
+      let ticking = false;
+      const throttledScroll = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            handleScroll();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+      
+      window.addEventListener('scroll', throttledScroll, { passive: true });
+      handleScroll(); // Initial call
+      
+      return () => {
+        window.removeEventListener('scroll', throttledScroll);
+      };
+    }
+
+    // Desktop: Use GSAP for smooth parallax
     // Create GSAP timeline with ScrollTrigger
-    // Using scrub: true (smooth) instead of scrub: 1 to fix lag when scrolling back up
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: scrollDist,
         start: scrollStart,
         end: scrollEnd,
-        scrub: true, // Smooth scrubbing, no lag
+        scrub: 0.5, // Smoother on desktop
         invalidateOnRefresh: true,
-        refreshPriority: -1, // Lower priority for better performance
-        anticipatePin: 1, // Anticipate pinning for smoother scrolling
+        refreshPriority: -1,
+        anticipatePin: 1,
+        markers: false, // Disable debug markers
       },
     });
 
@@ -255,6 +302,7 @@ export default function ParallaxBackground({
             width="1200"
             height="590"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
 
           {/* Mountain layers */}
@@ -264,6 +312,7 @@ export default function ParallaxBackground({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
           <image
             className="mountMg"
@@ -271,6 +320,7 @@ export default function ParallaxBackground({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
 
           {/* Cloud layers */}
@@ -287,6 +337,7 @@ export default function ParallaxBackground({
             width="1200"
             height="800"
             preserveAspectRatio="xMidYMid slice"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           />
           <image
             className="cloud1"

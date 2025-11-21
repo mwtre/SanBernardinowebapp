@@ -19,7 +19,7 @@ export default function Hero() {
         />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10 mt-32 md:mt-40">
+      <div className="container mx-auto px-4 relative z-10 mt-24 sm:mt-28 md:mt-32 lg:mt-40">
         <div className="flex flex-col items-center gap-0">
           {/* Logo */}
           <motion.div
