@@ -2,10 +2,12 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Suspense } from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
 import Bottle3DViewer from './Bottle3DViewer';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { assetPath } from '@/lib/paths';
 
 const products = [
   {
@@ -128,33 +130,21 @@ export default function Products() {
                       aspectRatio: '1 / 1'
                     }}
                   >
-                    <ErrorBoundary
-                      fallback={
-                        <div className="w-full h-full flex items-center justify-center bg-gray-200/20 rounded-lg">
-                          <span className="text-white text-xs">3D Model</span>
-                        </div>
-                      }
-                    >
-                      <Suspense
-                        fallback={
-                          <div className="w-full h-full flex items-center justify-center bg-gray-200/20 rounded-lg">
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                          </div>
-                        }
-                      >
-                        {!isMobile ? (
-                          <Bottle3DViewer
-                            bottleType={product.type as 'still' | 'sparkling' | 'extra-sparkling'}
-                            showControls={false}
-                            modelUrl="/SanBernardinowebapp/models/hitem3d.glb"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-200/20 rounded-lg">
-                            <span className="text-white text-xs font-semibold">{product.name}</span>
-                          </div>
-                        )}
-                      </Suspense>
-                    </ErrorBoundary>
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Image
+                        src={assetPath("/models/certfication.png")}
+                        alt={`${product.name} Certification`}
+                        width={400}
+                        height={600}
+                        className="object-contain w-full h-full"
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '100%',
+                          objectFit: 'contain'
+                        }}
+                        priority={index === 0}
+                      />
+                    </div>
                   </div>
                 </div>
 
