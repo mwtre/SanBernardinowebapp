@@ -2,6 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
+  basePath: '/SanBernardinowebapp',
+  assetPrefix: '/SanBernardinowebapp',
   images: {
     unoptimized: true,
   },
